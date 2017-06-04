@@ -31,4 +31,9 @@ public class EventManagementServiceImpl implements EventManagementService {
         eventDao.writeAllEvents(processor);
     }
 
+    @Override
+    public Event getSingleEvent(int eventId) {
+        return eventDao.getSingleEvent(eventId);
+    }
+
 }

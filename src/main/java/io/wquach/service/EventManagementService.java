@@ -22,4 +22,11 @@ public interface EventManagementService {
      * @param processor used to process the results of the query
      */
     void getAllEvents(Consumer processor);
+
+    /**
+     * Get a single event from the system
+     * @param eventId the ID of the event
+     * @return Event object representing the event with the ID eventId
+     */
+    Event getSingleEvent(int eventId);
 }

@@ -1,9 +1,14 @@
 package io.wquach.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,17 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.ResultSet;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import io.wquach.dao.EventDao;
 import io.wquach.dao.EventQueryResultProcessorFactory;
-import io.wquach.dao.jdbc.EventQueryResultProcessor;
-import io.wquach.dao.jdbc.EventResultSetAdapter;
 import io.wquach.domain.Event;
 import io.wquach.domain.EventBuilder;
 import io.wquach.service.EventManagementService;
@@ -38,6 +38,9 @@ public class EventController {
 
     @Autowired
     EventManagementService service;
+
+    @Autowired
+    JsonFactory jsonFactory;
 
     @RequestMapping(method = RequestMethod.POST, path = "/events", consumes = "application/json", produces = "application/json")
     public Event postEvent(@Valid @RequestBody Event event) {
@@ -65,8 +68,21 @@ public class EventController {
     public void getAllEvents(Writer responseWriter, HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        Consumer queryResultProcessor = eventQueryResultProcessorFactory.get(responseWriter);
+        JsonGenerator jsonGen = jsonFactory.createGenerator(responseWriter);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        jsonGen.setCodec(objectMapper);
+        jsonGen.writeStartArray();
+
+        Consumer queryResultProcessor = eventQueryResultProcessorFactory.get(jsonGen);
         service.getAllEvents(queryResultProcessor);
-        responseWriter.flush();
+
+        jsonGen.writeEndArray();
+        jsonGen.flush();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/events/{id}", produces = "application/json")
+    public Event getSingleEvent(@PathVariable int id) {
+        return service.getSingleEvent(id);
     }
 }

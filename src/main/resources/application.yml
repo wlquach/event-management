@@ -22,6 +22,7 @@ dao:
     event:
         insertQuery: INSERT INTO event_management.event (title,location,startTime,endTime) VALUES (?,?,?,?)
         selectAllQuery: SELECT id,title,location,startTime,endTime FROM event_management.event
+        selectOneQuery: SELECT id,title,location,startTime,endTime FROM event_management.event WHERE id=?
 endpoints:
     health:
         sensitive: false

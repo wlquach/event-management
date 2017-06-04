@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -29,10 +30,14 @@ import io.wquach.domain.Event;
 @Repository
 @ConfigurationProperties(prefix = "dao.event")
 public class JdbcEventDao implements EventDao {
+    @Autowired
+    private EventResultSetAdapter adapter;
+
     private JdbcTemplate jdbcTemplate;
 
     private String insertQuery;
     private String selectAllQuery;
+    private String selectOneQuery;
 
     @Autowired
     @Qualifier("primaryDataSource")
@@ -68,7 +73,7 @@ public class JdbcEventDao implements EventDao {
 
     @Override
     public Event getSingleEvent(int id) {
-        return null;
+        return jdbcTemplate.queryForObject(selectOneQuery, adapter, id);
     }
 
     @Override
@@ -84,5 +89,9 @@ public class JdbcEventDao implements EventDao {
 
     public void setSelectAllQuery(String selectAllQuery) {
         this.selectAllQuery = selectAllQuery;
+    }
+
+    public void setSelectOneQuery(String selectOneQuery) {
+        this.selectOneQuery = selectOneQuery;
     }
 }
