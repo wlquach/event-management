@@ -2,9 +2,10 @@ package io.wquach.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.hibernate.validator.constraints.Length;
+
 import java.util.Date;
 
-import javax.validation.Constraint;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -15,8 +16,10 @@ public class Event {
     int id;
 
     @NotNull
+    @Length(min = 1, max = 64)
     String title;
 
+    @Length(max = 128)
     String location;
 
     @NotNull

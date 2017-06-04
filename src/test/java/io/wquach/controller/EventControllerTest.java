@@ -20,7 +20,6 @@ import io.wquach.domain.EventBuilder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -34,7 +33,7 @@ public class EventControllerTest {
 
     @Test
     public void happyPath() throws Exception {
-        String body = getRequestBody("Test Event", false);
+        String body = getRequestBody("Test Event", "Test Location");
 
         this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andExpect(content().json(body));
@@ -42,7 +41,7 @@ public class EventControllerTest {
 
     @Test
     public void testNullEventTitle() throws Exception {
-        String body = getRequestBody(null, false);
+        String body = getRequestBody(null, "Test Location");
 
         this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -50,22 +49,46 @@ public class EventControllerTest {
 
     @Test
     public void testNullStartTime() throws Exception {
-        String body = getRequestBody("Test Event", false, null, new Date());
+        String body = getRequestBody("Test Event", "Test Location", null, new Date());
 
         this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
-    private String getRequestBody(String title, boolean allDay, Date startTime, Date endTime) throws JsonProcessingException {
-        Event event = new EventBuilder().setTitle(title).setStartTime(startTime).setEndTime(endTime).createEvent();
+    @Test
+    public void testTitleTooShort() throws Exception {
+        String body = getRequestBody("", "Test Location");
+
+        this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testTitleTooLong() throws Exception {
+        String body = getRequestBody("sixtyfivecharacterssixtyfivecharacterssixtyfivecharacterssixtyfiv", "Test Location");
+
+        this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testLocationTooLong() throws Exception {
+        String body = getRequestBody("Test Title", "onehundredtwentyninecharactersonehundredtwentyninecharactersonehundredtwentyninecharactersonehundredtwentyninecharactersonehundre");
+
+        this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    private String getRequestBody(String title, String location, Date startTime, Date endTime) throws JsonProcessingException {
+        Event event = EventBuilder.create().title(title).location(location).startTime(startTime).endTime(endTime).build();
 
         return mapper.writeValueAsString(event);
     }
 
-    private String getRequestBody(String title, boolean allDay) throws JsonProcessingException {
+    private String getRequestBody(String title, String location) throws JsonProcessingException {
         Instant startTime = Instant.now();
         Instant endTime = startTime.plus(1, ChronoUnit.HOURS);
 
-        return getRequestBody(title, allDay, Date.from(startTime), Date.from(endTime));
+        return getRequestBody(title, location, Date.from(startTime), Date.from(endTime));
     }
 }

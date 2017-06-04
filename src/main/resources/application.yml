@@ -1,0 +1,30 @@
+app:
+    datasource:
+        primary:
+            abandonedConnectionTimeout: 300
+            connectionFactoryClassName: oracle.jdbc.pool.OracleDataSource
+            connectionPoolName: eventManagerCp
+            connectionWaitTimeout: 10
+            driver-class-name: com.mysql.jdbc.Driver
+            inactiveConnectionTimeout: 120
+            initialPoolSize: 5
+            maxIdleTime: 120
+            maxPoolSize: 25
+            maxStatements: 15
+            minPoolSize: 5
+            password: changeme!
+            sqlForValidateConnection: select 1
+            timeToLiveConnectionTimeout: 90
+            url: jdbc:mysql://localhost/event_management?useSSL=false
+            username: event_management_app
+            validateConnectionOnBorrow: true
+dao:
+    event:
+        insertQuery: INSERT INTO event_management.event (title,location,startTime,endTime) VALUES (?,?,?,?)
+        selectAllQuery: SELECT id,title,location,startTime,endTime FROM event_management.event
+endpoints:
+    health:
+        sensitive: false
+management:
+    security:
+        enabled: false
