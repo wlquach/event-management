@@ -5,9 +5,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -35,7 +42,18 @@ public class JdbcEventDao implements EventDao {
 
     @Override
     public int insertEvent(Event event) {
-        return 0;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement pStmt = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+            int i = 0;
+            pStmt.setString(++i, event.getTitle());
+            pStmt.setString(++i, event.getLocation());
+            pStmt.setTimestamp(++i, Timestamp.valueOf(event.getStartTime()));
+            pStmt.setTimestamp(++i, Timestamp.valueOf(event.getEndTime()));
+            return pStmt;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     @Override

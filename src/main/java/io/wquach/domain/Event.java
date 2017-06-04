@@ -1,9 +1,15 @@
 package io.wquach.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -23,13 +29,18 @@ public class Event {
     String location;
 
     @NotNull
-    Date startTime;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    LocalDateTime startTime;
 
-    Date endTime;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    LocalDateTime endTime;
 
     public Event() {}
 
-    Event(String title, String location, Date startTime, Date endTime) {
+    Event(int id, String title, String location, LocalDateTime startTime, LocalDateTime endTime) {
+        this.id = id;
         this.title = title;
         this.location = location;
         this.startTime = startTime;
@@ -48,11 +59,11 @@ public class Event {
         return location;
     }
 
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 }

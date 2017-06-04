@@ -23,6 +23,7 @@ import io.wquach.dao.EventQueryResultProcessorFactory;
 import io.wquach.dao.jdbc.EventQueryResultProcessor;
 import io.wquach.dao.jdbc.EventResultSetAdapter;
 import io.wquach.domain.Event;
+import io.wquach.domain.EventBuilder;
 import io.wquach.service.EventManagementService;
 
 /**
@@ -40,7 +41,16 @@ public class EventController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/events", consumes = "application/json", produces = "application/json")
     public Event postEvent(@Valid @RequestBody Event event) {
-        return event;
+        //if event comes with ID throw
+        int id = service.addEvent(event);
+
+        return EventBuilder.create()
+                .id(id)
+                .title(event.getTitle())
+                .location(event.getLocation())
+                .startTime(event.getStartTime())
+                .endTime(event.getEndTime())
+                .build();
     }
 
     /**

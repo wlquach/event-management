@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -49,7 +50,7 @@ public class EventControllerTest {
 
     @Test
     public void testNullStartTime() throws Exception {
-        String body = getRequestBody("Test Event", "Test Location", null, new Date());
+        String body = getRequestBody("Test Event", "Test Location", null, LocalDateTime.now());
 
         this.mvc.perform(post("/events").contentType(MediaType.APPLICATION_JSON).content(body).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -79,7 +80,7 @@ public class EventControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    private String getRequestBody(String title, String location, Date startTime, Date endTime) throws JsonProcessingException {
+    private String getRequestBody(String title, String location, LocalDateTime startTime, LocalDateTime endTime) throws JsonProcessingException {
         Event event = EventBuilder.create().title(title).location(location).startTime(startTime).endTime(endTime).build();
 
         return mapper.writeValueAsString(event);
@@ -89,6 +90,6 @@ public class EventControllerTest {
         Instant startTime = Instant.now();
         Instant endTime = startTime.plus(1, ChronoUnit.HOURS);
 
-        return getRequestBody(title, location, Date.from(startTime), Date.from(endTime));
+        return getRequestBody(title, location, LocalDateTime.from(startTime), LocalDateTime.from(endTime));
     }
 }

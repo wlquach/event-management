@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 import io.wquach.domain.Event;
@@ -31,8 +32,8 @@ public class EventResultSetAdapter implements Function<ResultSet, Event>{
                     .id(resultSet.getInt(ID_COLUMN_NAME))
                     .title(resultSet.getString(TITLE_COLUMN_NAME))
                     .location(resultSet.getString(LOCATION_COLUMN_NAME))
-                    .startTime(resultSet.getTime(START_DATE_COLUMN_NAME))
-                    .endTime(resultSet.getTime(END_DATE_COLUMN_NAME))
+                    .startTime(LocalDateTime.from(resultSet.getTime(START_DATE_COLUMN_NAME).toInstant()))
+                    .endTime(LocalDateTime.from(resultSet.getTime(END_DATE_COLUMN_NAME).toInstant()))
                     .build();
         } catch (SQLException e) {
             logger.error("Unable to adapt ResultSet to Event", e);

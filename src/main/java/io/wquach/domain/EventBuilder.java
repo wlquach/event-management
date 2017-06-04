@@ -1,13 +1,13 @@
 package io.wquach.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class EventBuilder {
     private int id;
     private String title;
     private String location;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public static EventBuilder create() {
         return new EventBuilder();
@@ -28,17 +28,17 @@ public class EventBuilder {
         return this;
     }
 
-    public EventBuilder startTime(Date startTime) {
+    public EventBuilder startTime(LocalDateTime startTime) {
         this.startTime = startTime;
         return this;
     }
 
-    public EventBuilder endTime(Date endTime) {
+    public EventBuilder endTime(LocalDateTime endTime) {
         this.endTime = endTime;
         return this;
     }
 
     public Event build() {
-        return new Event(title, location, startTime, endTime);
+        return new Event(id, title, location, startTime, endTime);
     }
 }

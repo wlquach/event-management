@@ -23,7 +23,7 @@ public class EventManagementServiceImpl implements EventManagementService {
 
     @Override
     public int addEvent(@Valid Event event) {
-        return 0;
+        return eventDao.insertEvent(event);
     }
 
     @Override
