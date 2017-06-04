@@ -2,6 +2,8 @@ package io.wquach.service;
 
 import java.util.function.Consumer;
 
+import javax.validation.Valid;
+
 import io.wquach.dao.jdbc.EventQueryResultProcessor;
 import io.wquach.domain.Event;
 
@@ -16,6 +18,12 @@ public interface EventManagementService {
      * @return the id of the event in the system
      */
     int addEvent(Event event);
+
+    /**
+     * Update an event in the system, based on the ID in the provided event object
+     * @param event the event object with updated field values.
+     */
+    void updateEvent(Event event);
 
     /**
      * Get all events in the system, and processes them using the provided processor

@@ -92,4 +92,10 @@ public class EventController {
         service.deleteSingleEvent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/events/{id}")
+    public ResponseEntity updateEvent(@Valid @RequestBody Event event) {
+        service.updateEvent(event);
+        return ResponseEntity.noContent().build();
+    }
 }

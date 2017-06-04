@@ -24,6 +24,7 @@ dao:
         selectAllQuery: SELECT id,title,location,startTime,endTime FROM event_management.event
         selectOneQuery: SELECT id,title,location,startTime,endTime FROM event_management.event WHERE id=?
         deleteOneQuery: DELETE FROM event_management.event WHERE id=?
+        updateQuery: UPDATE event_management.event SET title=?,location=?,startTime=?,endTime=? WHERE id=?
 endpoints:
     health:
         sensitive: false
