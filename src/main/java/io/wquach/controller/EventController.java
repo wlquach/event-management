@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,5 +85,11 @@ public class EventController {
     @RequestMapping(method = RequestMethod.GET, path = "/events/{id}", produces = "application/json")
     public Event getSingleEvent(@PathVariable int id) {
         return service.getSingleEvent(id);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/events/{id}")
+    public ResponseEntity deleteSingleEvent(@PathVariable int id) {
+        service.deleteSingleEvent(id);
+        return ResponseEntity.noContent().build();
     }
 }

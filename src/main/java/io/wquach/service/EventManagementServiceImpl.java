@@ -36,4 +36,9 @@ public class EventManagementServiceImpl implements EventManagementService {
         return eventDao.getSingleEvent(eventId);
     }
 
+    @Override
+    public void deleteSingleEvent(int eventId) {
+        eventDao.deleteEvent(eventId);
+    }
+
 }

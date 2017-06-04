@@ -38,6 +38,7 @@ public class JdbcEventDao implements EventDao {
     private String insertQuery;
     private String selectAllQuery;
     private String selectOneQuery;
+    private String deleteOneQuery;
 
     @Autowired
     @Qualifier("primaryDataSource")
@@ -63,7 +64,7 @@ public class JdbcEventDao implements EventDao {
 
     @Override
     public void deleteEvent(int id) {
-
+        jdbcTemplate.update(deleteOneQuery, id);
     }
 
     @Override
@@ -93,5 +94,9 @@ public class JdbcEventDao implements EventDao {
 
     public void setSelectOneQuery(String selectOneQuery) {
         this.selectOneQuery = selectOneQuery;
+    }
+
+    public void setDeleteOneQuery(String deleteOneQuery) {
+        this.deleteOneQuery = deleteOneQuery;
     }
 }

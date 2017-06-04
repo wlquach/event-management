@@ -29,4 +29,10 @@ public interface EventManagementService {
      * @return Event object representing the event with the ID eventId
      */
     Event getSingleEvent(int eventId);
+
+    /**
+     * Delete a single event from the system
+     * @param eventId the ID of the event to delete
+     */
+    void deleteSingleEvent(int eventId);
 }
