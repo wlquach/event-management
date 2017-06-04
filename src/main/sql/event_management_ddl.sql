@@ -13,3 +13,21 @@ CREATE TABLE event (
   startTime DATETIME,
   endTime DATETIME
 );
+
+CREATE TABLE user (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(64),
+  firstName VARCHAR(32),
+  lastName VARCHAR(32)
+);
+
+CREATE TABLE event_registration (
+  event_id INT,
+  user_id INT,
+  FOREIGN KEY (event_id)
+    REFERENCES event(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (user_id)
+    REFERENCES user(id)
+    ON DELETE CASCADE
+);

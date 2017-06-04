@@ -31,7 +31,7 @@ import io.wquach.service.EventManagementService;
  * Created by wquach on 6/3/17.
  */
 @RestController
-@RequestMapping(path = "/v1")
+@RequestMapping(path = "/v1/events")
 public class EventController {
     @Autowired
     @Qualifier("jdbc")
@@ -43,8 +43,8 @@ public class EventController {
     @Autowired
     JsonFactory jsonFactory;
 
-    @RequestMapping(method = RequestMethod.POST, path = "/events", consumes = "application/json", produces = "application/json")
-    public Event postEvent(@Valid @RequestBody Event event) {
+    @RequestMapping(method = RequestMethod.POST, path = "/", consumes = "application/json", produces = "application/json")
+    public Event addEvent(@Valid @RequestBody Event event) {
         //if event comes with ID throw
         int id = service.addEvent(event);
 
@@ -65,7 +65,7 @@ public class EventController {
      * @param response       the HttpServletResponse used to set headers
      * @throws IOException if writing to the Writer fails
      */
-    @RequestMapping(method = RequestMethod.GET, path = "/events", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, path = "/", produces = "application/json")
     public void getAllEvents(Writer responseWriter, HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -82,18 +82,18 @@ public class EventController {
         jsonGen.flush();
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/events/{id}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, path = "/{id}", produces = "application/json")
     public Event getSingleEvent(@PathVariable int id) {
         return service.getSingleEvent(id);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/events/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public ResponseEntity deleteSingleEvent(@PathVariable int id) {
         service.deleteSingleEvent(id);
         return ResponseEntity.noContent().build();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/events/{id}")
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
     public ResponseEntity updateEvent(@Valid @RequestBody Event event) {
         service.updateEvent(event);
         return ResponseEntity.noContent().build();
