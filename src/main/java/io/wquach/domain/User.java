@@ -14,15 +14,15 @@ public class User implements Identifiable{
     int id;
 
     @NotNull
-    @Length(max = 64)
+    @Length(min = 1, max = 32)
     String username;
 
     @NotNull
-    @Length(max = 32)
+    @Length(min = 1, max = 32)
     String firstName;
 
     @NotNull
-    @Length(max = 32)
+    @Length(min = 1, max = 32)
     String lastName;
 
     public User(){}

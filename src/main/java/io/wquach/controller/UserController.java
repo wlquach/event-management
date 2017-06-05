@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import io.wquach.dao.jdbc.query.QueryResultProcessorFactory;
+import io.wquach.dao.jdbc.query.UserQueryResultProcessorFactory;
 import io.wquach.domain.User;
 import io.wquach.domain.UserBuilder;
 import io.wquach.service.CrudService;
@@ -35,8 +35,7 @@ import io.wquach.service.CrudService;
 @RequestMapping(path = "/v1/users")
 public class UserController {
     @Autowired
-    @Qualifier("jdbcUser")
-    QueryResultProcessorFactory queryResultProcessorFactory;
+    UserQueryResultProcessorFactory queryResultProcessorFactory;
 
     @Autowired
     @Qualifier("user")
@@ -47,7 +46,6 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity addUser(@Valid @RequestBody User user) {
-        //if event comes with ID throw
         int id = userService.add(user);
 
         User newUser = UserBuilder.create()

@@ -15,7 +15,6 @@ import io.wquach.domain.User;
  * Created by wquach on 6/3/17.
  */
 @Component
-@Qualifier("jdbcUser")
 public class UserQueryResultProcessorFactory implements QueryResultProcessorFactory<User>{
     @Autowired
     @Qualifier("jdbcUser")

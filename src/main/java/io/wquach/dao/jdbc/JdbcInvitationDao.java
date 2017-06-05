@@ -34,7 +34,7 @@ public class JdbcInvitationDao extends AbstractJdbcDao<Invitation> {
             int i = 0;
             pStmt.setInt(++i, invitation.getEventId());
             pStmt.setInt(++i, invitation.getUserId());
-            pStmt.setBoolean(++i, invitation.isAccepted());
+            pStmt.setBoolean(++i, invitation.isAccepted() == null ? false : invitation.isAccepted());
             return pStmt;
         }, keyHolder);
 

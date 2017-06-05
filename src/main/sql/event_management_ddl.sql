@@ -14,9 +14,13 @@ CREATE TABLE event (
   endTime DATETIME
 );
 
+/* Add index on title, since we allow querying by title */
+CREATE INDEX event_title_idx
+ON event_management.event (title);
+
 CREATE TABLE user (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(64),
+  username VARCHAR(32),
   firstName VARCHAR(32),
   lastName VARCHAR(32)
 );

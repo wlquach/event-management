@@ -15,7 +15,6 @@ import io.wquach.domain.Event;
  * Created by wquach on 6/3/17.
  */
 @Component
-@Qualifier("jdbcEvent")
 public class EventQueryResultProcessorFactory implements QueryResultProcessorFactory<Event>{
     @Autowired
     @Qualifier("jdbcEvent")

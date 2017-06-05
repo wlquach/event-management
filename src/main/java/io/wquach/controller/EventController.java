@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import io.wquach.dao.jdbc.query.EventQueryResultProcessorFactory;
 import io.wquach.dao.jdbc.query.QueryResultProcessorFactory;
 import io.wquach.domain.Event;
 import io.wquach.domain.EventBuilder;
@@ -44,8 +45,7 @@ import io.wquach.service.InvitationService;
 @RequestMapping(path = "/v1/events")
 public class EventController {
     @Autowired
-    @Qualifier("jdbcEvent")
-    QueryResultProcessorFactory queryResultProcessorFactory;
+    EventQueryResultProcessorFactory queryResultProcessorFactory;
 
     @Autowired
     EventService eventService;
@@ -58,7 +58,6 @@ public class EventController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity addEvent(@Valid @RequestBody Event event) {
-        //if event comes with ID throw
         int id = eventService.add(event);
 
         Event newEvent = EventBuilder.create()
@@ -135,8 +134,12 @@ public class EventController {
     @RequestMapping(method = RequestMethod.POST, path = "/{eventId}/invitations", consumes = "application/json", produces = "application/json")
     public ResponseEntity invite(@PathVariable int eventId,
             @Valid @RequestBody Invitation invitation) {
-        //if event comes with ID throw
-        int id = invitationService.add(invitation);
+        Invitation invitationWithEventId = InvitationBuilder.create()
+                .eventId(eventId)
+                .userId(invitation.getUserId())
+                .build();
+
+        int id = invitationService.add(invitationWithEventId);
 
         Invitation newInvitation = InvitationBuilder.create()
                 .id(id)
