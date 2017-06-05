@@ -89,6 +89,7 @@ public class EventController {
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public void getAllEvents(Writer responseWriter, HttpServletResponse response,
+                             @RequestParam(required = false) Integer page,
                              @RequestParam(required = false) String titleKeyword) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -100,7 +101,7 @@ public class EventController {
         if(titleKeyword == null) {
             jsonGen.writeStartArray();
             Consumer queryResultProcessor = queryResultProcessorFactory.get(jsonGen);
-            eventService.getAll(queryResultProcessor);
+            eventService.getAll(queryResultProcessor, page);
             jsonGen.writeEndArray();
         } else {
             jsonGen.writeObject(eventService.getEventsByTitle(titleKeyword));

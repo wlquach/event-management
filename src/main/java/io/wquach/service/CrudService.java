@@ -28,6 +28,13 @@ public interface CrudService<T> {
     void getAll(Consumer processor);
 
     /**
+     * Get all object of type T in the system, and processes them using the provided processor
+     * @param processor used to process the results of the query
+     * @param page the page of result to return
+     */
+    void getAll(Consumer processor, Integer page);
+
+    /**
      * Get subset object of type T in the system
      * @Param filter used to filter subset
      */

@@ -36,5 +36,10 @@ public abstract class AbstractService<T extends Identifiable> implements CrudSer
         getDao().delete(id);
     }
 
+    @Override
+    public void getAll(Consumer processor, Integer page) {
+        getAll(processor);
+    }
+
     protected abstract Dao<T> getDao();
 }

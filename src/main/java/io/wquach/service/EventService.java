@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import io.wquach.dao.Dao;
 import io.wquach.dao.EventDao;
@@ -29,5 +30,10 @@ public class EventService extends AbstractService<Event> {
 
     public List<Event> getEventsByTitle(String title) {
         return eventDao.getEventsByTitle(title);
+    }
+
+    @Override
+    public void getAll(Consumer processor, Integer page) {
+        eventDao.writeAll(processor, page);
     }
 }
