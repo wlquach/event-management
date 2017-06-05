@@ -11,7 +11,7 @@ import io.wquach.domain.User;
 /**
  * Created by wquach on 6/4/17.
  */
-public abstract class AbstractResultSetAdapter<T> implements Function<ResultSet, T>, RowMapper<T> {
+public abstract class AbstractRowMapper<T> implements Function<ResultSet, T>, RowMapper<T> {
     @Override
     public T mapRow(ResultSet rs, int rowNum) throws SQLException {
         return apply(rs);

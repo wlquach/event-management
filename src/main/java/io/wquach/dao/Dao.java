@@ -22,6 +22,4 @@ public interface Dao<T extends Identifiable> {
     T getSingle(int id);
 
     void writeAll(Consumer<ResultSet> processor);
-
-    List<T> getSubset(int filterId);
 }

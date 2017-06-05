@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import io.wquach.dao.Dao;
+import io.wquach.dao.jdbc.JdbcInvitationDao;
 import io.wquach.domain.Event;
 import io.wquach.domain.Invitation;
+import io.wquach.domain.InvitationBuilder;
 import io.wquach.domain.User;
 
 /**
@@ -18,19 +20,14 @@ import io.wquach.domain.User;
 @Component
 public class InvitationService extends AbstractService<Invitation>{
     @Autowired
-    Dao<Invitation> invitationDao;
-
-    @Autowired
-    @Qualifier("invitedUser")
-    Dao<User> invitedUserDao;
+    JdbcInvitationDao invitationDao;
 
     @Override
     protected Dao<Invitation> getDao() {
         return invitationDao;
     }
 
-    @Override
-    public List<Invitation> getSubset(int filter) {
-        throw new UnsupportedOperationException();
+    public Invitation getAllInvitations(int eventId) {
+        return invitationDao.getInvitationsByEvent(eventId);
     }
 }

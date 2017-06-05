@@ -16,12 +16,12 @@ import io.wquach.domain.UserBuilder;
  */
 @Component
 @Qualifier("jdbcUser")
-public class UserResultSetAdapter extends AbstractResultSetAdapter<User> {
-    private static final Logger logger = LoggerFactory.getLogger(UserResultSetAdapter.class);
-    private static final String ID_COLUMN_NAME = "id";
-    private static final String USERNAME_COLUMN_NAME = "username";
-    private static final String FIRSTNAME_COLUMN_NAME = "firstName";
-    private static final String LASTNAME_COLUMN_NAME = "lastName";
+public class UserRowMapper extends AbstractRowMapper<User> {
+    private static final Logger logger = LoggerFactory.getLogger(UserRowMapper.class);
+    static final String ID_COLUMN_NAME = "userId";
+    static final String USERNAME_COLUMN_NAME = "username";
+    static final String FIRSTNAME_COLUMN_NAME = "firstName";
+    static final String LASTNAME_COLUMN_NAME = "lastName";
 
     public User apply(ResultSet resultSet) {
         try {

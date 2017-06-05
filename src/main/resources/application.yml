@@ -22,29 +22,38 @@ dao:
     pageSize: 50
     event:
         insertQuery: INSERT INTO event_management.event (title,location,startTime,endTime) VALUES (?,?,?,?)
-        selectAllQuery: SELECT id,title,location,startTime,endTime FROM event_management.event
-        selectOneQuery: SELECT id,title,location,startTime,endTime FROM event_management.event WHERE id=?
+        selectAllQuery: SELECT id AS eventId,title,location,startTime,endTime FROM event_management.event
+        selectOneQuery: SELECT id AS eventId,title,location,startTime,endTime FROM event_management.event WHERE id=?
         deleteOneQuery: DELETE FROM event_management.event WHERE id=?
         updateQuery: UPDATE event_management.event SET title=?,location=?,startTime=?,endTime=? WHERE id=?
-        getEventsByTitle: SELECT id,title,location,startTime,endTime FROM event_management.event WHERE title LIKE ?
-        selectAllQueryWithPage: SELECT id,title,location,startTime,endTime FROM event_management.event LIMIT ?,?
+        getEventsByTitle: SELECT id AS eventId,title,location,startTime,endTime FROM event_management.event WHERE title LIKE ?
+        selectAllQueryWithPage: SELECT id AS eventId,title,location,startTime,endTime FROM event_management.event LIMIT ?,?
     user:
         insertQuery: INSERT INTO event_management.user (username,firstName,lastName) VALUES (?,?,?)
-        selectAllQuery: SELECT id,username,firstName,lastName FROM event_management.user
-        selectOneQuery: SELECT id,username,firstName,lastName FROM event_management.user WHERE id=?
+        selectAllQuery: SELECT id AS userId,username,firstName,lastName FROM event_management.user
+        selectOneQuery: SELECT id AS userId,username,firstName,lastName FROM event_management.user WHERE id=?
         deleteOneQuery: DELETE FROM event_management.user WHERE id=?
         updateQuery: UPDATE event_management.user SET username=?,firstName=?,lastName=? WHERE id=?
     invitation:
         insertQuery: INSERT INTO event_management.invitation (eventId,userId,accepted) VALUES (?,?,?)
         deleteOneQuery: DELETE FROM event_management.invitation WHERE id=?
         updateQuery: UPDATE event_management.invitation SET accepted=? WHERE id=?
-    invitedUser:
         selectAllQuery: >
-                        SELECT id,username,firstName,lastName FROM event_management.user WHERE id IN
-                        (SELECT userId FROM event_management.invitation WHERE eventId=?)
+                        SELECT u.id AS userId,u.username,u.firstName,u.lastName,
+                               e.id AS eventId,e.title,e.location,e.startTime,e.endTime,
+                               i.accepted
+                        FROM event_management.user AS u
+                        INNER JOIN event_management.invitation AS i ON u.id = i.userId
+                        INNER JOIN event_management.event AS e ON e.id = i.eventId
+                        WHERE e.id = ?
         selectOneQuery: >
-                        SELECT id,username,firstName,lastName FROM event_management.user WHERE id IN
-                        (SELECT userId FROM event_management.invitation WHERE id=?)
+                        SELECT u.id AS userId,u.username,u.firstName,u.lastName,
+                               e.id AS eventId,e.title,e.location,e.startTime,e.endTime,
+                               i.accepted
+                        FROM event_management.user AS u
+                        INNER JOIN event_management.invitation AS i ON u.id = i.userId
+                        INNER JOIN event_management.event AS e ON e.id = i.eventId
+                        WHERE i.id = ?
 endpoints:
     health:
         sensitive: false

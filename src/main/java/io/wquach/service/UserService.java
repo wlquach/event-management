@@ -23,9 +23,4 @@ public class UserService extends AbstractService<User>{
     protected Dao<User> getDao() {
         return userDao;
     }
-
-    @Override
-    public List<User> getSubset(int filter) {
-        throw new UnsupportedOperationException();
-    }
 }

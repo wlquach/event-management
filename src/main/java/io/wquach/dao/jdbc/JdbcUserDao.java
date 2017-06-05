@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.List;
 
-import io.wquach.dao.jdbc.adapter.UserResultSetAdapter;
+import io.wquach.dao.jdbc.adapter.UserRowMapper;
 import io.wquach.domain.User;
 
 /**
@@ -23,7 +22,7 @@ import io.wquach.domain.User;
 @Qualifier("user")
 public class JdbcUserDao extends AbstractJdbcDao<User> {
     @Autowired
-    private UserResultSetAdapter adapter;
+    private UserRowMapper adapter;
 
     @Override
     public int insert(User user) {
@@ -43,11 +42,6 @@ public class JdbcUserDao extends AbstractJdbcDao<User> {
     @Override
     public void update(User user) {
         jdbcTemplate.update(updateQuery, user.getUsername(), user.getFirstName(), user.getLastName(), user.getId());
-    }
-
-    @Override
-    public List<User> getSubset(int filter) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

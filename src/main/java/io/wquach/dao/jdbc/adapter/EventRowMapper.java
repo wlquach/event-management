@@ -16,13 +16,13 @@ import io.wquach.domain.EventBuilder;
  */
 @Component
 @Qualifier("jdbcEvent")
-public class EventResultSetAdapter extends AbstractResultSetAdapter<Event> {
-    private static final Logger logger = LoggerFactory.getLogger(EventResultSetAdapter.class);
-    private static final String ID_COLUMN_NAME = "id";
-    private static final String TITLE_COLUMN_NAME = "title";
-    private static final String LOCATION_COLUMN_NAME = "location";
-    private static final String START_DATE_COLUMN_NAME = "startTime";
-    private static final String END_DATE_COLUMN_NAME = "endTime";
+public class EventRowMapper extends AbstractRowMapper<Event> {
+    private static final Logger logger = LoggerFactory.getLogger(EventRowMapper.class);
+    static final String ID_COLUMN_NAME = "eventId";
+    static final String TITLE_COLUMN_NAME = "title";
+    static final String LOCATION_COLUMN_NAME = "location";
+    static final String START_TIME_COLUMN_NAME = "startTime";
+    static final String END_TIME_COLUMN_NAME = "endTime";
 
     public Event apply(ResultSet resultSet) {
         try {
@@ -30,8 +30,8 @@ public class EventResultSetAdapter extends AbstractResultSetAdapter<Event> {
                     .id(resultSet.getInt(ID_COLUMN_NAME))
                     .title(resultSet.getString(TITLE_COLUMN_NAME))
                     .location(resultSet.getString(LOCATION_COLUMN_NAME))
-                    .startTime(resultSet.getTimestamp(START_DATE_COLUMN_NAME).toLocalDateTime())
-                    .endTime(resultSet.getTimestamp(END_DATE_COLUMN_NAME).toLocalDateTime())
+                    .startTime(resultSet.getTimestamp(START_TIME_COLUMN_NAME).toLocalDateTime())
+                    .endTime(resultSet.getTimestamp(END_TIME_COLUMN_NAME).toLocalDateTime())
                     .build();
         } catch (SQLException e) {
             logger.error("Unable to adapt ResultSet to Event", e);

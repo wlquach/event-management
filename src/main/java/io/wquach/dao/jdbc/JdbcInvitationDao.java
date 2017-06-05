@@ -9,11 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.List;
 
-import io.wquach.dao.jdbc.adapter.InvitationResultSetAdapter;
-import io.wquach.dao.jdbc.adapter.UserResultSetAdapter;
-import io.wquach.domain.Event;
+import io.wquach.dao.jdbc.adapter.InvitationResultSetExtractor;
+import io.wquach.dao.jdbc.adapter.InvitationRowMapper;
 import io.wquach.domain.Invitation;
 
 /**
@@ -23,7 +21,10 @@ import io.wquach.domain.Invitation;
 @ConfigurationProperties(prefix = "dao.invitation")
 public class JdbcInvitationDao extends AbstractJdbcDao<Invitation> {
     @Autowired
-    private InvitationResultSetAdapter adapter;
+    private InvitationRowMapper adapter;
+
+    @Autowired
+    private InvitationResultSetExtractor rsExtractor;
 
     @Override
     public int insert(Invitation invitation) {
@@ -45,9 +46,8 @@ public class JdbcInvitationDao extends AbstractJdbcDao<Invitation> {
         jdbcTemplate.update(updateQuery, invitation.isAccepted(), invitation.getId());
     }
 
-    @Override
-    public List<Invitation> getSubset(int eventId) {
-        return jdbcTemplate.query(selectAllQuery, adapter, eventId);
+    public Invitation getInvitationsByEvent(int eventId) {
+        return jdbcTemplate.query(selectAllQuery, rsExtractor, eventId);
     }
 
     @Override

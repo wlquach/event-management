@@ -23,11 +23,6 @@ public class EventService extends AbstractService<Event> {
         return eventDao;
     }
 
-    @Override
-    public List<Event> getSubset(int filter) {
-        throw new UnsupportedOperationException();
-    }
-
     public List<Event> getEventsByTitle(String title) {
         return eventDao.getEventsByTitle(title);
     }

@@ -35,12 +35,6 @@ public interface CrudService<T> {
     void getAll(Consumer processor, Integer page);
 
     /**
-     * Get subset object of type T in the system
-     * @Param filter used to filter subset
-     */
-    List<T> getSubset(int filter);
-
-    /**
      * Get a single object from the system
      * @param id the ID of the object
      * @return T object with ID of id

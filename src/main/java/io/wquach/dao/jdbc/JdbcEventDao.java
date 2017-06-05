@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import io.wquach.dao.EventDao;
-import io.wquach.dao.jdbc.adapter.EventResultSetAdapter;
+import io.wquach.dao.jdbc.adapter.EventRowMapper;
 import io.wquach.domain.Event;
 
 /**
@@ -26,7 +26,7 @@ import io.wquach.domain.Event;
 @ConfigurationProperties(prefix = "dao.event")
 public class JdbcEventDao extends AbstractJdbcDao<Event> implements EventDao {
     @Autowired
-    private EventResultSetAdapter adapter;
+    private EventRowMapper adapter;
 
     private String getEventsByTitle;
     private String selectAllQueryWithPage;
@@ -63,11 +63,6 @@ public class JdbcEventDao extends AbstractJdbcDao<Event> implements EventDao {
     @Override
     protected RowMapper<Event> getRowMapper() {
         return adapter;
-    }
-
-    @Override
-    public List<Event> getSubset(int filter) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

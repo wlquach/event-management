@@ -1,25 +1,37 @@
 package io.wquach.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 /**
  * Represents an Invitation to a User for an Event
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Invitation implements Identifiable{
     int id;
-    int eventId;
+
+    Integer eventId;
 
     @NotNull
-    int userId;
+    Integer userId;
 
-    boolean accepted;
+    Event event;
+
+    List<InvitedUser> users;
+
+    Boolean accepted;
 
     public Invitation(){}
 
-    Invitation(int id, int eventId, int userId, boolean accepted) {
+    Invitation(int id, Integer eventId, Event event, Integer userId, List<InvitedUser> users, Boolean accepted) {
         this.id = id;
         this.eventId = eventId;
+        this.event = event;
         this.userId = userId;
+        this.users = users;
         this.accepted = accepted;
     }
 
@@ -28,15 +40,23 @@ public class Invitation implements Identifiable{
         return id;
     }
 
-    public int getEventId() {
+    public Integer getEventId() {
         return eventId;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public boolean isAccepted() {
+    public Event getEvent() {
+        return event;
+    }
+
+    public List<InvitedUser> getUsers() {
+        return users;
+    }
+
+    public Boolean isAccepted() {
         return accepted;
     }
 }

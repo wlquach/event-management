@@ -35,6 +35,7 @@ import io.wquach.domain.InvitationDecision;
 import io.wquach.domain.User;
 import io.wquach.service.CrudService;
 import io.wquach.service.EventService;
+import io.wquach.service.InvitationService;
 
 /**
  * Created by wquach on 6/3/17.
@@ -50,11 +51,7 @@ public class EventController {
     EventService eventService;
 
     @Autowired
-    CrudService<Invitation> invitationService;
-
-    @Autowired
-    @Qualifier("invitedUser")
-    CrudService<User> invitedUserService;
+    InvitationService invitationService;
 
     @Autowired
     JsonFactory jsonFactory;
@@ -145,7 +142,6 @@ public class EventController {
                 .id(id)
                 .eventId(eventId)
                 .userId(invitation.getUserId())
-                .accepted(invitation.isAccepted())
                 .build();
         URI resource = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
@@ -167,14 +163,14 @@ public class EventController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/{eventId}/invitations", consumes = "application/json")
     public ResponseEntity getAllInvitationsForEvent(@PathVariable int eventId) {
-        List<User> invitations = invitedUserService.getSubset(eventId);
-        return ResponseEntity.ok().body(invitations);
+        Invitation invitation = invitationService.getAllInvitations(eventId);
+        return ResponseEntity.ok().body(invitation);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{eventId}/invitations/{id}", consumes = "application/json")
     public ResponseEntity getInvitation(@PathVariable int eventId,
                                         @PathVariable int id) {
-        User invitedUser = invitedUserService.getOne(id);
-        return ResponseEntity.ok().body(invitedUser);
+        Invitation invitation = invitationService.getOne(id);
+        return ResponseEntity.ok().body(invitation);
     }
 }
