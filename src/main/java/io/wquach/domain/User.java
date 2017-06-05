@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * Created by wquach on 6/3/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Identifiable{
     int id;
 
     @NotNull
@@ -34,6 +34,7 @@ public class User {
         this.lastName = lastName;
     }
 
+    @Override
     public int getId() {
         return id;
     }

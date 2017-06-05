@@ -10,11 +10,12 @@ import java.util.function.Consumer;
 import javax.sql.DataSource;
 
 import io.wquach.dao.Dao;
+import io.wquach.domain.Identifiable;
 
 /**
  * Created by wquach on 6/4/17.
  */
-public abstract class AbstractJdbcDao<T> implements Dao<T> {
+public abstract class AbstractJdbcDao<T extends Identifiable> implements Dao<T> {
     protected String insertQuery;
     protected String selectAllQuery;
     protected String selectOneQuery;
@@ -34,6 +35,11 @@ public abstract class AbstractJdbcDao<T> implements Dao<T> {
     @Override
     public void delete(int id) {
         jdbcTemplate.update(deleteOneQuery, id);
+    }
+
+    @Override
+    public void delete(T object) {
+        delete(object.getId());
     }
 
     @Override

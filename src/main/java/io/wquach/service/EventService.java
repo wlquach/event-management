@@ -3,41 +3,31 @@ package io.wquach.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 import io.wquach.dao.Dao;
+import io.wquach.dao.EventDao;
 import io.wquach.domain.Event;
 
 /**
  * Created by wquach on 6/3/17.
  */
 @Component
-public class EventService implements CrudService<Event> {
+public class EventService extends AbstractService<Event> {
     @Autowired
-    Dao<Event> eventDao;
+    EventDao eventDao;
 
     @Override
-    public int add(Event event) {
-        return eventDao.insert(event);
+    protected Dao<Event> getDao() {
+        return eventDao;
     }
 
     @Override
-    public void update(Event event) {
-        eventDao.update(event);
+    public List<Event> getSubset(int filter) {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void getAll(Consumer processor) {
-        eventDao.writeAll(processor);
-    }
-
-    @Override
-    public Event getSingle(int eventId) {
-        return eventDao.getSingle(eventId);
-    }
-
-    @Override
-    public void deleteSingle(int eventId) {
-        eventDao.delete(eventId);
+    public List<Event> getEventsByTitle(String title) {
+        return eventDao.getEventsByTitle(title);
     }
 }

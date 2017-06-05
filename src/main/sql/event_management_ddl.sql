@@ -21,13 +21,15 @@ CREATE TABLE user (
   lastName VARCHAR(32)
 );
 
-CREATE TABLE event_registration (
-  event_id INT,
-  user_id INT,
-  FOREIGN KEY (event_id)
+CREATE TABLE invitation (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  eventId INT,
+  userId INT,
+  accepted BOOLEAN,
+  FOREIGN KEY (eventId)
     REFERENCES event(id)
     ON DELETE CASCADE,
-  FOREIGN KEY (user_id)
+  FOREIGN KEY (userId)
     REFERENCES user(id)
     ON DELETE CASCADE
 );

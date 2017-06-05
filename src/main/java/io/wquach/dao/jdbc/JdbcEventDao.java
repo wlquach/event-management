@@ -10,7 +10,10 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 
+import io.wquach.dao.EventDao;
+import io.wquach.dao.jdbc.adapter.EventResultSetAdapter;
 import io.wquach.domain.Event;
 
 /**
@@ -18,9 +21,11 @@ import io.wquach.domain.Event;
  */
 @Repository
 @ConfigurationProperties(prefix = "dao.event")
-public class JdbcEventDao extends AbstractJdbcDao<Event> {
+public class JdbcEventDao extends AbstractJdbcDao<Event> implements EventDao {
     @Autowired
     private EventResultSetAdapter adapter;
+
+    private String getEventsByTitle;
 
     @Override
     public int insert(Event event) {
@@ -45,7 +50,25 @@ public class JdbcEventDao extends AbstractJdbcDao<Event> {
     }
 
     @Override
+    public void delete(Event event) {
+    }
+
+    @Override
     protected RowMapper<Event> getRowMapper() {
         return adapter;
+    }
+
+    @Override
+    public List<Event> getSubset(int filter) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Event> getEventsByTitle(String title) {
+        return jdbcTemplate.query(getEventsByTitle, adapter, '%' + title + '%');
+    }
+
+    public void setGetEventsByTitle(String getEventsByTitle) {
+        this.getEventsByTitle = getEventsByTitle;
     }
 }

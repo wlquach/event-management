@@ -3,7 +3,6 @@ package io.wquach.controller;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URI;
 import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import io.wquach.dao.QueryResultProcessorFactory;
-import io.wquach.domain.Event;
-import io.wquach.domain.EventBuilder;
+import io.wquach.dao.jdbc.query.QueryResultProcessorFactory;
 import io.wquach.domain.User;
 import io.wquach.domain.UserBuilder;
 import io.wquach.service.CrudService;
@@ -40,22 +39,28 @@ public class UserController {
     QueryResultProcessorFactory queryResultProcessorFactory;
 
     @Autowired
+    @Qualifier("user")
     CrudService<User> userService;
 
     @Autowired
     JsonFactory jsonFactory;
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public User addUser(@Valid @RequestBody User user) {
+    public ResponseEntity addUser(@Valid @RequestBody User user) {
         //if event comes with ID throw
         int id = userService.add(user);
 
-        return UserBuilder.create()
+        User newUser = UserBuilder.create()
                 .id(id)
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .build();
+        URI resource = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(id).toUri();
+
+        return ResponseEntity.created(resource).body(newUser);
     }
 
     /**
@@ -84,7 +89,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/{id}", produces = "application/json")
     public User getSingleUser(@PathVariable int id) {
-        return userService.getSingle(id);
+        return userService.getOne(id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
@@ -94,8 +99,14 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
-    public ResponseEntity updateEvent(@Valid @RequestBody User user) {
-        userService.update(user);
+    public ResponseEntity updateUser(@PathVariable int id, @Valid @RequestBody User user) {
+        User updateUser = UserBuilder.create()
+                .id(id)
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .build();
+        userService.update(updateUser);
         return ResponseEntity.noContent().build();
     }
 }

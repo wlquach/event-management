@@ -7,25 +7,27 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import io.wquach.dao.Dao;
+import io.wquach.domain.Invitation;
 import io.wquach.domain.User;
 
 /**
  * Created by wquach on 6/4/17.
  */
 @Component
-@Qualifier("user")
-public class UserService extends AbstractService<User>{
+@Qualifier("invitedUser")
+public class InvitedUsersService extends AbstractService<User> {
+
     @Autowired
-    @Qualifier("user")
-    Dao<User> userDao;
+    @Qualifier("invitedUser")
+    Dao<User> invitedUserDao;
 
     @Override
     protected Dao<User> getDao() {
-        return userDao;
+        return invitedUserDao;
     }
 
     @Override
     public List<User> getSubset(int filter) {
-        throw new UnsupportedOperationException();
+        return invitedUserDao.getSubset(filter);
     }
 }

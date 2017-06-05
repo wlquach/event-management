@@ -12,42 +12,34 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
+import io.wquach.dao.jdbc.adapter.InvitationResultSetAdapter;
 import io.wquach.dao.jdbc.adapter.UserResultSetAdapter;
+import io.wquach.domain.Invitation;
 import io.wquach.domain.User;
 
 /**
  * Created by wquach on 6/4/17.
  */
 @Repository
-@ConfigurationProperties(prefix = "dao.user")
-@Qualifier("user")
-public class JdbcUserDao extends AbstractJdbcDao<User> {
+@ConfigurationProperties(prefix = "dao.invitedUser")
+@Qualifier("invitedUser")
+public class JdbcInvitedUserDao extends AbstractJdbcDao<User> {
     @Autowired
     private UserResultSetAdapter adapter;
 
     @Override
     public int insert(User user) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement pStmt = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-            int i = 0;
-            pStmt.setString(++i, user.getUsername());
-            pStmt.setString(++i, user.getFirstName());
-            pStmt.setString(++i, user.getLastName());
-            return pStmt;
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
+       throw new UnsupportedOperationException();
     }
 
     @Override
     public void update(User user) {
-        jdbcTemplate.update(updateQuery, user.getUsername(), user.getFirstName(), user.getLastName(), user.getId());
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<User> getSubset(int filter) {
-        throw new UnsupportedOperationException();
+    public List<User> getSubset(int eventId) {
+        return jdbcTemplate.query(selectAllQuery, adapter, eventId);
     }
 
     @Override

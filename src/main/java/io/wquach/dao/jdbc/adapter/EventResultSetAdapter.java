@@ -1,15 +1,12 @@
-package io.wquach.dao.jdbc;
+package io.wquach.dao.jdbc.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.function.Function;
 
 import io.wquach.domain.Event;
 import io.wquach.domain.EventBuilder;
@@ -19,7 +16,7 @@ import io.wquach.domain.EventBuilder;
  */
 @Component
 @Qualifier("jdbcEvent")
-public class EventResultSetAdapter implements Function<ResultSet, Event>, RowMapper<Event> {
+public class EventResultSetAdapter extends AbstractResultSetAdapter<Event> {
     private static final Logger logger = LoggerFactory.getLogger(EventResultSetAdapter.class);
     private static final String ID_COLUMN_NAME = "id";
     private static final String TITLE_COLUMN_NAME = "title";
@@ -41,10 +38,5 @@ public class EventResultSetAdapter implements Function<ResultSet, Event>, RowMap
         }
 
         return null;
-    }
-
-    @Override
-    public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return apply(rs);
     }
 }

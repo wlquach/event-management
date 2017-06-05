@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * Created by wquach on 6/3/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Event {
+public class Event implements Identifiable {
     int id;
 
     @NotNull
@@ -45,6 +45,7 @@ public class Event {
         this.endTime = endTime;
     }
 
+    @Override
     public int getId() {
         return id;
     }

@@ -1,4 +1,4 @@
-package io.wquach.dao.jdbc;
+package io.wquach.dao.jdbc.query;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import io.wquach.domain.Event;
 
 /**
  * Created by wquach on 6/3/17.

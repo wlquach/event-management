@@ -1,17 +1,13 @@
-package io.wquach.dao.jdbc;
+package io.wquach.dao.jdbc.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Function;
 
-import io.wquach.domain.Event;
-import io.wquach.domain.EventBuilder;
 import io.wquach.domain.User;
 import io.wquach.domain.UserBuilder;
 
@@ -20,7 +16,7 @@ import io.wquach.domain.UserBuilder;
  */
 @Component
 @Qualifier("jdbcUser")
-public class UserResultSetAdapter implements Function<ResultSet, User>, RowMapper<User> {
+public class UserResultSetAdapter extends AbstractResultSetAdapter<User> {
     private static final Logger logger = LoggerFactory.getLogger(UserResultSetAdapter.class);
     private static final String ID_COLUMN_NAME = "id";
     private static final String USERNAME_COLUMN_NAME = "username";
@@ -36,14 +32,9 @@ public class UserResultSetAdapter implements Function<ResultSet, User>, RowMappe
                     .lastName(resultSet.getString(LASTNAME_COLUMN_NAME))
                     .build();
         } catch (SQLException e) {
-            logger.error("Unable to adapt ResultSet to Event", e);
+            logger.error("Unable to adapt ResultSet to User", e);
         }
 
         return null;
-    }
-
-    @Override
-    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return apply(rs);
     }
 }

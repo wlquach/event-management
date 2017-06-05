@@ -1,4 +1,4 @@
-package io.wquach.dao.jdbc;
+package io.wquach.dao.jdbc.query;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.util.function.Function;
 
-import io.wquach.dao.QueryResultProcessorFactory;
 import io.wquach.domain.Event;
 
 /**
@@ -17,7 +16,7 @@ import io.wquach.domain.Event;
  */
 @Component
 @Qualifier("jdbcEvent")
-public class EventQueryResultProcessorFactory implements QueryResultProcessorFactory{
+public class EventQueryResultProcessorFactory implements QueryResultProcessorFactory<Event>{
     @Autowired
     @Qualifier("jdbcEvent")
     Function<ResultSet, Event> eventQueryResultAdapter;

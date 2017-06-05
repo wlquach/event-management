@@ -1,5 +1,6 @@
 package io.wquach.service;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 
@@ -27,11 +28,17 @@ public interface CrudService<T> {
     void getAll(Consumer processor);
 
     /**
+     * Get subset object of type T in the system
+     * @Param filter used to filter subset
+     */
+    List<T> getSubset(int filter);
+
+    /**
      * Get a single object from the system
      * @param id the ID of the object
      * @return T object with ID of id
      */
-    T getSingle(int id);
+    T getOne(int id);
 
     /**
      * Delete a single object from the system
