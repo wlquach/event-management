@@ -18,7 +18,7 @@ import io.wquach.domain.EventBuilder;
  * Created by wquach on 6/3/17.
  */
 @Component
-@Qualifier("jdbc")
+@Qualifier("jdbcEvent")
 public class EventResultSetAdapter implements Function<ResultSet, Event>, RowMapper<Event> {
     private static final Logger logger = LoggerFactory.getLogger(EventResultSetAdapter.class);
     private static final String ID_COLUMN_NAME = "id";

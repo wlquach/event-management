@@ -22,10 +22,10 @@ import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import io.wquach.dao.EventQueryResultProcessorFactory;
+import io.wquach.dao.QueryResultProcessorFactory;
 import io.wquach.domain.Event;
 import io.wquach.domain.EventBuilder;
-import io.wquach.service.EventManagementService;
+import io.wquach.service.CrudService;
 
 /**
  * Created by wquach on 6/3/17.
@@ -34,19 +34,19 @@ import io.wquach.service.EventManagementService;
 @RequestMapping(path = "/v1/events")
 public class EventController {
     @Autowired
-    @Qualifier("jdbc")
-    EventQueryResultProcessorFactory eventQueryResultProcessorFactory;
+    @Qualifier("jdbcEvent")
+    QueryResultProcessorFactory queryResultProcessorFactory;
 
     @Autowired
-    EventManagementService service;
+    CrudService<Event> eventService;
 
     @Autowired
     JsonFactory jsonFactory;
 
-    @RequestMapping(method = RequestMethod.POST, path = "/", consumes = "application/json", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public Event addEvent(@Valid @RequestBody Event event) {
         //if event comes with ID throw
-        int id = service.addEvent(event);
+        int id = eventService.add(event);
 
         return EventBuilder.create()
                 .id(id)
@@ -65,7 +65,7 @@ public class EventController {
      * @param response       the HttpServletResponse used to set headers
      * @throws IOException if writing to the Writer fails
      */
-    @RequestMapping(method = RequestMethod.GET, path = "/", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public void getAllEvents(Writer responseWriter, HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -75,8 +75,8 @@ public class EventController {
         jsonGen.setCodec(objectMapper);
         jsonGen.writeStartArray();
 
-        Consumer queryResultProcessor = eventQueryResultProcessorFactory.get(jsonGen);
-        service.getAllEvents(queryResultProcessor);
+        Consumer queryResultProcessor = queryResultProcessorFactory.get(jsonGen);
+        eventService.getAll(queryResultProcessor);
 
         jsonGen.writeEndArray();
         jsonGen.flush();
@@ -84,18 +84,18 @@ public class EventController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/{id}", produces = "application/json")
     public Event getSingleEvent(@PathVariable int id) {
-        return service.getSingleEvent(id);
+        return eventService.getSingle(id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     public ResponseEntity deleteSingleEvent(@PathVariable int id) {
-        service.deleteSingleEvent(id);
+        eventService.deleteSingle(id);
         return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/{id}")
     public ResponseEntity updateEvent(@Valid @RequestBody Event event) {
-        service.updateEvent(event);
+        eventService.update(event);
         return ResponseEntity.noContent().build();
     }
 }

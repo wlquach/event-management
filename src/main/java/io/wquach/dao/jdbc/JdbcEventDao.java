@@ -1,27 +1,16 @@
 package io.wquach.dao.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.function.Consumer;
 
-import javax.sql.DataSource;
-
-import io.wquach.dao.EventDao;
 import io.wquach.domain.Event;
 
 /**
@@ -29,26 +18,12 @@ import io.wquach.domain.Event;
  */
 @Repository
 @ConfigurationProperties(prefix = "dao.event")
-public class JdbcEventDao implements EventDao {
+public class JdbcEventDao extends AbstractJdbcDao<Event> {
     @Autowired
     private EventResultSetAdapter adapter;
 
-    private JdbcTemplate jdbcTemplate;
-
-    private String insertQuery;
-    private String selectAllQuery;
-    private String selectOneQuery;
-    private String deleteOneQuery;
-    private String updateQuery;
-
-    @Autowired
-    @Qualifier("primaryDataSource")
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
     @Override
-    public int insertEvent(Event event) {
+    public int insert(Event event) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement pStmt = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
@@ -64,45 +39,13 @@ public class JdbcEventDao implements EventDao {
     }
 
     @Override
-    public void deleteEvent(int id) {
-        jdbcTemplate.update(deleteOneQuery, id);
-    }
-
-    @Override
-    public void updateEvent(Event event) {
+    public void update(Event event) {
         jdbcTemplate.update(updateQuery, event.getTitle(), event.getLocation(),
                 event.getStartTime(), event.getEndTime(), event.getId());
     }
 
     @Override
-    public Event getSingleEvent(int id) {
-        return jdbcTemplate.queryForObject(selectOneQuery, adapter, id);
-    }
-
-    @Override
-    public void writeAllEvents(Consumer processor) {
-        jdbcTemplate.query(selectAllQuery, resultSet -> {
-            processor.accept(resultSet);
-        });
-    }
-
-    public void setInsertQuery(String insertQuery) {
-        this.insertQuery = insertQuery;
-    }
-
-    public void setSelectAllQuery(String selectAllQuery) {
-        this.selectAllQuery = selectAllQuery;
-    }
-
-    public void setSelectOneQuery(String selectOneQuery) {
-        this.selectOneQuery = selectOneQuery;
-    }
-
-    public void setDeleteOneQuery(String deleteOneQuery) {
-        this.deleteOneQuery = deleteOneQuery;
-    }
-
-    public void setUpdateQuery(String updateQuery) {
-        this.updateQuery = updateQuery;
+    protected RowMapper<Event> getRowMapper() {
+        return adapter;
     }
 }

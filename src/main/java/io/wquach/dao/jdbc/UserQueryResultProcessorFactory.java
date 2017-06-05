@@ -9,21 +9,22 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.util.function.Function;
 
-import io.wquach.dao.EventQueryResultProcessorFactory;
+import io.wquach.dao.QueryResultProcessorFactory;
 import io.wquach.domain.Event;
+import io.wquach.domain.User;
 
 /**
  * Created by wquach on 6/3/17.
  */
 @Component
-@Qualifier("jdbc")
-public class JdbcEventQueryResultProcessorFactory implements EventQueryResultProcessorFactory {
+@Qualifier("jdbcUser")
+public class UserQueryResultProcessorFactory implements QueryResultProcessorFactory{
     @Autowired
-    @Qualifier("jdbc")
-    Function<ResultSet, Event> eventQueryResultAdapter;
+    @Qualifier("jdbcUser")
+    Function<ResultSet, User> userQueryResultAdapter;
 
     @Override
-    public EventQueryResultProcessor get(JsonGenerator jsonGen) {
-        return new EventQueryResultProcessor(jsonGen, eventQueryResultAdapter::apply);
+    public QueryResultProcessor<User> get(JsonGenerator jsonGen) {
+        return new QueryResultProcessor<>(jsonGen, userQueryResultAdapter::apply);
     }
 }

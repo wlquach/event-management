@@ -25,6 +25,8 @@ public class User {
     @Length(max = 32)
     String lastName;
 
+    public User(){}
+
     User(int id, String username, String firstName, String lastName) {
         this.id = id;
         this.username = username;
